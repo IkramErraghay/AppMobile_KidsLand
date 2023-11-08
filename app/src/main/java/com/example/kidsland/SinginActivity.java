@@ -78,7 +78,39 @@ public class SinginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+        //pour forgot password
+        TextView forgotPasswordTextView = findViewById(R.id.forgotpasswordTextView);
+        forgotPasswordTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Récupérez l'e-mail saisi par l'utilisateur
+                String email = editTextEmail.getText().toString();
+
+                if (TextUtils.isEmpty(email)) {
+                    Toast.makeText(SinginActivity.this, "Please enter your email address.", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Utilisez la fonction de réinitialisation de mot de passe de Firebase
+                    mAuth.sendPasswordResetEmail(email)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(SinginActivity.this, "Password reset email sent.", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(SinginActivity.this, "Failed to send password reset email.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }
+            }
+        });
+
     }
+
+
+
 
 
 }
