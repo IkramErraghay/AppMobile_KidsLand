@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "631942485779",
+    "project_id": "kidsland-3b117",
+    "storage_bucket": "kidsland-3b117.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:631942485779:android:52a8d0b98c3fbee41e2ce6",
+        "android_client_info": {
+          "package_name": "com.example.kidsland"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk_WI-VWvurrUsUz5iCfEUFoGSaARV_Is"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
