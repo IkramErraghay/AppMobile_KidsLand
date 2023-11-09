@@ -1,18 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#67ABEB"
     tools:context=".CategorieActivity">
 
+    <!-- Image de gauche en haut -->
+
+    <!-- Image de droite en haut -->
+
+    <!-- Barre de recherche -->
+
+    <ImageView
+        android:id="@+id/leftTopImage"
+        android:layout_width="111dp"
+        android:layout_height="95dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/kidslandlogo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/rightTopImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/pdp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="8dp"
+        android:queryHint="Search..."
+        app:layout_constraintEnd_toStartOf="@id/rightTopImage"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/leftTopImage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Titre pour les films -->
+
+    <!-- RecyclerView pour afficher une liste horizontale de films -->
     <TextView
-        android:id="@+id/helloWorldText"
+        android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:text="Films"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchView" />
+
+
+
+
+    <!-- Ajoutez un HorizontalScrollView -->
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleTextView"
+        android:layout_marginTop="16dp">
+
+        <!-- Un LinearLayout horizontal pour contenir les images -->
+        <LinearLayout
+            android:id="@+id/imageContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Vos ImageView pour film1, film2, et film3 -->
+            <ImageView
+                android:id="@+id/Film1"
+                android:layout_width="141dp"
+                android:layout_height="196dp"
+                android:src="@drawable/film1"
+                android:layout_marginStart="16dp" />
+
+
+            <ImageView
+                android:id="@+id/Film2"
+                android:layout_width="148dp"
+                android:layout_height="196dp"
+                android:src="@drawable/film2"
+                android:layout_marginStart="16dp" />
+
+            <ImageView
+                android:id="@+id/Film3"
+                android:layout_width="148dp"
+                android:layout_height="196dp"
+                android:src="@drawable/film3"
+                android:layout_marginStart="16dp" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+
+
+
+
+
+
+    <!-- Ajoutez des boutons précédent et suivant -->
+    <Button
+        android:id="@+id/previousButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Précédent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/horizontalScrollView"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/nextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Suivant"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/horizontalScrollView"
+        android:layout_marginTop="16dp"/>
+
+
+
+
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
