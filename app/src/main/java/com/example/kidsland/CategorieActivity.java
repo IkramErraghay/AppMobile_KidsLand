@@ -35,11 +35,25 @@ public class CategorieActivity extends AppCompatActivity {
     private Button previousButton2;
     private Button nextButton2;
 
+    private  ImageView rightTopImage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categorie);
+
+        //pour que lorsque on clique sur le profile il nous redirige vers la page du profile
+        rightTopImage = findViewById(R.id.rightTopImage);
+
+        rightTopImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Ouvrez l'activité ProfileActivity ici
+                Intent intent = new Intent(CategorieActivity.this, ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
 
         horizontalScrollView = findViewById(R.id.horizontalScrollView);
         previousButton = findViewById(R.id.previousButton);

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#67ABEB">
+
+    <!-- Toolbar -->
+
+    <!-- User Profile Information -->
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_alignParentTop="true"
+        android:gravity="start|center_vertical"
+        android:paddingTop="5dp">
+
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/back_button"
+            android:gravity="start|center_vertical"
+            android:padding="10dp"
+            android:src="@drawable/baseline_arrow_back_24" />
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:text="@string/profiles_mo"
+            android:textAppearance="@style/profiles_mo"
+            android:textStyle="bold" />
+
+        <!-- User Image -->
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_gravity="end"
+            android:contentDescription="@string/user_image"
+            android:src="@drawable/kidslandlogo" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_marginTop="26dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- User Image -->
+        <ImageView
+            android:id="@+id/userImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="@string/user_image"
+            android:src="@drawable/pdp" />
+
+        <!-- User Name -->
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="user_name"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <!-- User Role -->
+        <TextView
+            android:id="@+id/userRole"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="user_role"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+    <!-- Switch account section-->
+
+    <RelativeLayout
+        android:id="@+id/layoutSwitchAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_marginTop="31dp"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/rectangle_4"
+            android:layout_width="369dp"
+            android:layout_height="32dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="-23dp"
+            android:layout_marginTop="184dp"
+            android:background="@drawable/rectangle_4" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="187dp"
+            android:contentDescription="Switch Account Icon"
+            android:src="@drawable/baseline_switch_account_24" />
+
+        <TextView
+            android:id="@+id/switch_acco"
+            android:layout_width="249dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rectangle_4"
+            android:layout_marginLeft="45dp"
+            android:layout_marginTop="-31dp"
+            android:gravity="top"
+            android:text="@string/switch_acco"
+            android:textAppearance="@style/profiles_mo"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rectangle_4"
+            android:layout_marginTop="0dp">
+
+            <!-- RecyclerView for Account List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/accountsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layoutSwitchAccount"
+        android:layout_marginTop="16dp"
+       android:orientation="horizontal">
+
+        <View
+            android:id="@+id/rectangle_5"
+            android:layout_width="369dp"
+            android:layout_height="32dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="-16dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/rectangle_4" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="6dp"
+            android:contentDescription="slection Icon"
+            android:src="@drawable/baseline_download_24" />
+
+        <TextView
+            android:id="@+id/selection"
+            android:layout_width="249dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rectangle_5"
+            android:layout_marginLeft="45dp"
+            android:layout_marginTop="-32dp"
+            android:gravity="top"
+            android:text="My Selection"
+            android:textAppearance="@style/profiles_mo"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rectangle_5"
+            android:layout_marginTop="7dp">
+
+            <!-- RecyclerView for Account List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/accountsRecyclerView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
+    </RelativeLayout>
+
+</RelativeLayout>

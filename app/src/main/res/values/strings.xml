@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">KidsLand</string>
+    <string name="back_button">Retour</string>
+    <string name="user_image">userImage</string>
+    <string name="profiles_mo">Profiles &amp; More</string>
+    <string name="switch_acco">Switch Account</string>
 </resources>
