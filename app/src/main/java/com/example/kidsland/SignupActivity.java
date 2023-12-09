@@ -13,14 +13,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kidsland.Model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignupActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
     private EditText editTextEmail, editTextFullName, editTextPassword, editTextConfirmPassword;
 
     @Override
@@ -28,8 +32,10 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        // Initialisez mAuth avec une instance de FirebaseAuth
+        // Initialize mAuth and mDatabase
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference("users");
+
 
         // Listener for the sign-in text
         TextView signInText = findViewById(R.id.alreadyHaveAccountTextView);
@@ -70,6 +76,7 @@ public class SignupActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         // Registration was successful
                                         FirebaseUser user = mAuth.getCurrentUser();
+                                        saveUserToDatabase(user.getUid(), email, fullName, password);
                                         Toast.makeText(SignupActivity.this, "Registration success", Toast.LENGTH_SHORT).show();
 
                                         Intent intent = new Intent(SignupActivity.this, SinginActivity.class);
@@ -84,5 +91,11 @@ public class SignupActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void saveUserToDatabase(String userId, String email, String fullName,String password) {
+        User user = new User(email, fullName, password);
+        user.setPassword(password);
+        mDatabase.child(userId).setValue(user);
     }
 }
