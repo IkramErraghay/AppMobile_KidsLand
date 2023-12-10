@@ -21,7 +21,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
         // Récupérez l'ID de la ressource de la vidéo à partir de l'Intent
         int videoResId = getIntent().getIntExtra("video_res_id", 0);
-
+        int imageResId = getIntent().getIntExtra("image_res_id", 0);
         // Construisez l'URI de la vidéo à partir de la ressource
         Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + videoResId);
 
@@ -35,5 +35,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
         // Commencez la lecture de la vidéo
         videoView.start();
+
+
     }
 }
