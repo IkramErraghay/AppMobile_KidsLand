@@ -142,25 +142,18 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <HorizontalScrollView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/accountsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/rectangle_4"
-            android:layout_marginTop="0dp">
-
-            <!-- RecyclerView for Account List -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/accountsRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" />
-        </HorizontalScrollView>
+            android:layout_below="@id/rectangle_4"
+            android:orientation="horizontal" />
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/layoutSwitchAccount"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
        android:orientation="horizontal">
 
         <View
