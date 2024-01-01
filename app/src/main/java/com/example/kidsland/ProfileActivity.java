@@ -25,6 +25,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kidsland.Model.ChildAccount;
 import com.example.kidsland.Model.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -139,7 +141,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             tempImageUri = data.getData();
-            // Vous pouvez éventuellement mettre à jour l'interface utilisateur pour montrer l'image sélectionnée
         }
     }
 
@@ -193,50 +194,102 @@ public class ProfileActivity extends AppCompatActivity {
         EditText editTextName = dialog.findViewById(R.id.editTextFullName);
         EditText editTextEmail = dialog.findViewById(R.id.editTextEmail);
         EditText editTextPassword = dialog.findViewById(R.id.editTextPassword);
-        Button buttonSave = dialog.findViewById(R.id.buttonSave);
-        Button buttonCancel = dialog.findViewById(R.id.buttonCancel);
 
         editTextName.setText(currentUserName);
         editTextEmail.setText(currentUserEmail);
 
-        buttonSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Call the saveChanges method with the necessary parameters
-                saveChanges(editTextName.getText().toString(), editTextEmail.getText().toString(), editTextPassword.getText().toString());
+        Button buttonSave = dialog.findViewById(R.id.buttonSave);
+        Button buttonCancel = dialog.findViewById(R.id.buttonCancel);
 
-                // Dismiss the dialog after saving changes
-                dialog.dismiss();
+        buttonSave.setOnClickListener(view -> {
+            String newName = editTextName.getText().toString();
+            String newEmail = editTextEmail.getText().toString();
+            String newPassword = editTextPassword.getText().toString();
+
+            if (!newEmail.equals(currentUserEmail) || !newPassword.isEmpty()) {
+                // Si l'email ou le mot de passe a changé, demandez la re-authentification
+                promptReauthentication(newName, newEmail, newPassword);
+            } else {
+                // Sinon, mettez à jour uniquement le nom
+                updateUserDatabaseInfo(FirebaseAuth.getInstance().getCurrentUser().getUid(), newName, currentUserEmail, "");
             }
+            dialog.dismiss();
         });
 
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Dismiss the dialog without saving changes
-                dialog.dismiss();
-            }
-        });
+        buttonCancel.setOnClickListener(view -> dialog.dismiss());
 
         dialog.show();
     }
 
+    private void promptReauthentication(String newName, String newEmail, String newPassword) {
+        new AlertDialog.Builder(this)
+                .setTitle("Re-authentication Required")
+                .setMessage("To update your email or password, please re-authenticate.")
+                .setPositiveButton("Re-authenticate", (dialog, which) -> {
+                    redirectToSignIn(newName, newEmail, newPassword);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
 
-    private void saveChanges(String updatedName, String updatedEmail, String updatedPassword) {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            String uid = currentUser.getUid();
-            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users").child(uid);
+    private void redirectToSignIn(String newName, String newEmail, String newPassword) {
+        Intent signInIntent = new Intent(this, SinginActivity.class);
+        signInIntent.putExtra("newName", newName);
+        signInIntent.putExtra("newEmail", newEmail);
+        signInIntent.putExtra("newPassword", newPassword);
+        startActivity(signInIntent);
+        finish();
+    }
 
-            // Update user name and email
-            userReference.child("fullName").setValue(updatedName);
-            userReference.child("email").setValue(updatedEmail);
-            userReference.child("password").setValue(updatedPassword);
 
-            // Display a message or perform any other necessary actions
-            Toast.makeText(this, "Changes saved successfully", Toast.LENGTH_SHORT).show();
+    private void updateUserDatabaseInfo(String userId, String updatedName, String updatedEmail, String updatedPassword) {
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users").child(userId);
+        userReference.child("fullName").setValue(updatedName);
+        userReference.child("email").setValue(updatedEmail);
+
+        if (!updatedPassword.isEmpty()) {
+            // Update password
+            FirebaseAuth.getInstance().getCurrentUser().updatePassword(updatedPassword).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(this, "Profile and password updated successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    handleFirebaseException(task.getException(), "Failed to update password");
+                }
+            });
+        } else {
+            Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void handleFirebaseException(Exception exception, String defaultMsg) {
+        if (exception instanceof FirebaseAuthRecentLoginRequiredException) {
+            // User needs to re-authenticate
+            promptReauthentication();
+        } else if (exception instanceof FirebaseAuthInvalidCredentialsException) {
+            // Invalid email or password
+            Toast.makeText(this, "Invalid email or password", Toast.LENGTH_LONG).show();
+        } else {
+            // Other error
+            Toast.makeText(this, defaultMsg, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void promptReauthentication() {
+        new AlertDialog.Builder(this)
+                .setTitle("Re-authentication Required")
+                .setMessage("To update your email or password, please re-authenticate.")
+                .setPositiveButton("Re-authenticate", (dialog, which) -> redirectToSignIn())
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void redirectToSignIn() {
+        // Intent pour rediriger vers la page de connexion
+        Intent signInIntent = new Intent(this, SinginActivity.class);
+        startActivity(signInIntent);
+        finish();
+    }
+
 
     private void fetchAndDisplayChildAccounts() {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();

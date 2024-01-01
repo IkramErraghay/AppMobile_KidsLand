@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SinginActivity extends AppCompatActivity {
 
@@ -33,41 +35,38 @@ public class SinginActivity extends AppCompatActivity {
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
 
+        // Récupérez les données passées de ProfileActivity (si elles existent)
+        Intent intent = getIntent();
+        String newName = intent.getStringExtra("newName");
+        String newEmail = intent.getStringExtra("newEmail");
+        String newPassword = intent.getStringExtra("newPassword");
 
         Button signInButton = findViewById(R.id.signinbutton);
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Get user input from the EditText fields
-                String email = editTextEmail.getText().toString();
-                String password = editTextPassword.getText().toString();
+        signInButton.setOnClickListener(v -> {
+            String email = editTextEmail.getText().toString();
+            String password = editTextPassword.getText().toString();
 
-                if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-                    Toast.makeText(SinginActivity.this, "Please fill in all fields.", Toast.LENGTH_SHORT).show();
-                } else {
-
-                    mAuth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(SinginActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        // Sign-in was successful
-                                        FirebaseUser user = mAuth.getCurrentUser();
-                                        Toast.makeText(SinginActivity.this, "Sign-in success.", Toast.LENGTH_SHORT).show();
-
-
-                                        Intent intent = new Intent(SinginActivity.this, CategorieActivity.class);
-                                        startActivity(intent);
-                                    } else {
-                                        // Sign-in failed
-                                        Toast.makeText(SinginActivity.this, "Sign-in failed.", Toast.LENGTH_SHORT).show();
-                                    }
+            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+                Toast.makeText(SinginActivity.this, "Please fill in all fields.", Toast.LENGTH_SHORT).show();
+            } else {
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(SinginActivity.this, "Sign-in success.", Toast.LENGTH_SHORT).show();
+                                if (newEmail != null && newPassword != null) {
+                                    // Mettez à jour le profil de l'utilisateur après la re-authentification
+                                    updateProfile(newName, newEmail, newPassword);
+                                } else {
+                                    // Sinon, continuez vers CategorieActivity
+                                    Intent categoryIntent = new Intent(SinginActivity.this, CategorieActivity.class);
+                                    startActivity(categoryIntent);
                                 }
-                            });
-                }
+                            } else {
+                                Toast.makeText(SinginActivity.this, "Sign-in failed.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
         });
-
         // Configuration pour "Don't have an account ? Sign Up" TextView
         TextView dontHaveAccountTextView = findViewById(R.id.dontHaveAccountTextView);
         dontHaveAccountTextView.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +109,44 @@ public class SinginActivity extends AppCompatActivity {
     }
 
 
+    private void updateProfile(String newName, String newEmail, String newPassword) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            // Update email
+            user.updateEmail(newEmail)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            // Update name and email in the database
+                            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
+                            userRef.child("fullName").setValue(newName);
+                            userRef.child("email").setValue(newEmail);
+
+                            if (!newPassword.isEmpty()) {
+                                // If a new password is provided, update it
+                                user.updatePassword(newPassword)
+                                        .addOnCompleteListener(task1 -> {
+                                            if (task1.isSuccessful()) {
+                                                // Update the password in the database
+                                                userRef.child("password").setValue(newPassword);
+                                                Toast.makeText(this, "Profile and password updated successfully", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(this, "Failed to update password", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            } else {
+                                // If no new password is provided, show success message for profile update only
+                                Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                            }
+
+                            // Redirect to CategorieActivity
+                            Intent categoryIntent = new Intent(SinginActivity.this, CategorieActivity.class);
+                            startActivity(categoryIntent);
+                        } else {
+                            Toast.makeText(this, "Failed to update email", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
 
 
 
