@@ -1,42 +1,103 @@
 package com.example.kidsland;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-public class CategorieActivity extends AppCompatActivity {
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-    private HorizontalScrollView horizontalScrollView;
-    private Button previousButton;
-    private Button nextButton;
+import com.example.kidsland.Model.Film;
+import com.example.kidsland.Model.Game;
+import com.example.kidsland.Model.InteractiveStory;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
-    private ImageView film1;
-    private ImageView film2;
-    private ImageView film3;
+import java.util.ArrayList;
+import java.util.List;
 
-    private HorizontalScrollView horizontalScrollView1;
-    private Button previousButton1;
-    private Button nextButton1;
+public class CategorieActivity extends AppCompatActivity implements
+        FilmAdapter.OnFilmClickListener,
+        InteractiveStoryAdapter.OnInteractiveStoryClickListener,
+        GameAdapter.OnGameClickListener {
 
-    private ImageView histoire1;
-    private ImageView histoire2;
-    private ImageView histoire3;
+    private RecyclerView recyclerViewFilms, recyclerViewInteractiveStories, recyclerViewGames;
+    private FilmAdapter filmAdapter;
+    private InteractiveStoryAdapter interactiveStoryAdapter;
+    private GameAdapter gameAdapter;
+    private List<Film> filmList = new ArrayList<>();
+    private List<InteractiveStory> interactiveStoryList = new ArrayList<>();
+    private List<Game> gameList = new ArrayList<>();
+
+    private ImageView rightTopImage;
+
+    @Override
+    public void onFilmClick(Film film) {
+        StorageReference videoRef = FirebaseStorage.getInstance().getReferenceFromUrl(film.getUrlVideo());
+        videoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri downloadUrl) {
+                Intent intent = new Intent(CategorieActivity.this, VideoPlayerActivity.class);
+                intent.putExtra("video_url", downloadUrl.toString());
+                startActivity(intent);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Gérez l'erreur ici
+                Toast.makeText(CategorieActivity.this, "Erreur lors du chargement de la vidéo", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 
-    private ImageView game1;
-    private ImageView game2;
-    private ImageView game3;
-    private HorizontalScrollView horizontalScrollView2;
-    private Button previousButton2;
-    private Button nextButton2;
+    @Override
+    public void onInteractiveStoryClick(InteractiveStory interactiveStory) {
+        StorageReference videoRef = FirebaseStorage.getInstance().getReferenceFromUrl(interactiveStory.getUrlVideo());
+        videoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri downloadUrl) {
+                Intent intent = new Intent(CategorieActivity.this, VideoPlayerActivity.class);
+                intent.putExtra("video_url", downloadUrl.toString());
+                startActivity(intent);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Gérez l'erreur ici
+                Toast.makeText(CategorieActivity.this, "Erreur lors du chargement de la vidéo", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
-    private  ImageView rightTopImage;
-
+    @Override
+    public void onGameClick(Game game) {
+        StorageReference videoRef = FirebaseStorage.getInstance().getReferenceFromUrl(game.getUrlVideo());
+        videoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri downloadUrl) {
+                Intent intent = new Intent(CategorieActivity.this, VideoPlayerActivity.class);
+                intent.putExtra("video_url", downloadUrl.toString());
+                startActivity(intent);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Toast.makeText(CategorieActivity.this, "Erreur lors du chargement de la vidéo", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,152 +116,90 @@ public class CategorieActivity extends AppCompatActivity {
             }
         });
 
-        horizontalScrollView = findViewById(R.id.horizontalScrollView);
-        previousButton = findViewById(R.id.previousButton);
-        nextButton = findViewById(R.id.nextButton);
+        // Initialize RecyclerViews
+        recyclerViewFilms = findViewById(R.id.recyclerViewFilms);
+        recyclerViewInteractiveStories = findViewById(R.id.recyclerViewInteractiveStories);
+        recyclerViewGames = findViewById(R.id.recyclerViewGames);
 
-        previousButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                horizontalScrollView.smoothScrollBy(-300, 0); // Ajustez la valeur selon votre besoin
-            }
-        });
+        // Set layout managers
+        recyclerViewFilms.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewInteractiveStories.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewGames.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                horizontalScrollView.smoothScrollBy(300, 0); // Ajustez la valeur selon votre besoin
-            }
-        });
+        // Initialize adapters
+        filmAdapter = new FilmAdapter(this, filmList, this);
+        interactiveStoryAdapter = new InteractiveStoryAdapter(this, interactiveStoryList, this);
+        gameAdapter = new GameAdapter(this, gameList, this);
 
-        film1 = findViewById(R.id.Film1);
-        film2 = findViewById(R.id.Film2);
-        film3 = findViewById(R.id.Film3);
+        // Set adapters
+        recyclerViewFilms.setAdapter(filmAdapter);
+        recyclerViewInteractiveStories.setAdapter(interactiveStoryAdapter);
+        recyclerViewGames.setAdapter(gameAdapter);
 
 
-
-        film1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CategorieActivity.this, VideoPlayerActivity.class);
-                intent.putExtra("video_res_id", R.raw.video1); // Remplacez "nom_de_votre_video1" par le nom de votre vidéo dans le dossier "raw"
-                startActivity(intent);
-                // Action à effectuer lorsque film1 est cliqué
-                // Par exemple, ouvrir une nouvelle activité ou effectuer une action spécifique
-            }
-        });
-
-        film2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Action à effectuer lorsque film2 est cliqué
-                // Par exemple, ouvrir une nouvelle activité ou effectuer une action spécifique
-            }
-        });
-
-        film3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Action à effectuer lorsque film3 est cliqué
-                // Par exemple, ouvrir une nouvelle activité ou effectuer une action spécifique
-            }
-        });
-
-        horizontalScrollView1 = findViewById(R.id.horizontalScrollView1);
-        previousButton1 = findViewById(R.id.previousButton1);
-        nextButton1 = findViewById(R.id.nextButton1);
-
-        previousButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                horizontalScrollView1.smoothScrollBy(-300, 0); // Ajustez la valeur selon votre besoin
-            }
-        });
-
-        nextButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                horizontalScrollView1.smoothScrollBy(300, 0); // Ajustez la valeur selon votre besoin
-            }
-        });
-
-
-        histoire1 = findViewById(R.id.histoir1);
-        histoire2 = findViewById(R.id.histoir2);
-        histoire3 = findViewById(R.id.histoir3);
-
-        histoire1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Action à effectuer lorsque histoire1 est cliqué
-                // Par exemple, ouvrir une nouvelle activité ou effectuer une action spécifique
-            }
-        });
-
-        histoire2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Action à effectuer lorsque histoire2 est cliqué
-                // Par exemple, ouvrir une nouvelle activité ou effectuer une action spécifique
-            }
-        });
-
-        histoire3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Action à effectuer lorsque histoire3 est cliqué
-                // Par exemple, ouvrir une nouvelle activité ou effectuer une action spécifique
-            }
-        });
-
-        game1 = findViewById(R.id.game1);
-        game2 = findViewById(R.id.game2);
-        game3 = findViewById(R.id.game3);
-
-        horizontalScrollView2 = findViewById(R.id.horizontalScrollView2);
-        previousButton2 = findViewById(R.id.previousButton2);
-        nextButton2 = findViewById(R.id.nextButton2);
-
-        game1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Action to perform when game1 is clicked
-            }
-        });
-
-        game2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Action to perform when game2 is clicked
-            }
-        });
-
-        game3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Action to perform when game3 is clicked
-            }
-        });
-
-        previousButton2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                horizontalScrollView2.smoothScrollBy(-300, 0);
-            }
-        });
-
-        nextButton2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                horizontalScrollView2.smoothScrollBy(300, 0);
-            }
-        });
-
-
-
-
-
-
-
+        // Fetch data
+        fetchFilms();
+        fetchInteractiveStories();
+        fetchGames();
     }
+
+    private void fetchFilms() {
+        FirebaseDatabase.getInstance().getReference("films")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        filmList.clear();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Film film = snapshot.getValue(Film.class);
+                            filmList.add(film);
+                        }
+                        filmAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
+    }
+
+    private void fetchInteractiveStories() {
+        FirebaseDatabase.getInstance().getReference("interactive_stories")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        interactiveStoryList.clear();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            InteractiveStory interactiveStory = snapshot.getValue(InteractiveStory.class);
+                            interactiveStoryList.add(interactiveStory);
+                        }
+                        interactiveStoryAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Log error or show error message
+                    }
+                });
+    }
+
+    private void fetchGames() {
+        FirebaseDatabase.getInstance().getReference("games")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        gameList.clear();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Game game = snapshot.getValue(Game.class);
+                            gameList.add(game);
+                        }
+                        gameAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Log error or show error message
+                    }
+                });
+    }
+
 }

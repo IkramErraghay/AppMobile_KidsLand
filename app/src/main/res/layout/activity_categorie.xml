@@ -86,70 +86,17 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/searchView" />
-
-        <HorizontalScrollView
-            android:id="@+id/horizontalScrollView"
+        <!-- ... Title and Buttons as per your design -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewFilms"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            android:layout_height="200dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/titleTextView">
-
-            <!-- Un LinearLayout horizontal pour contenir les images -->
-            <LinearLayout
-                android:id="@+id/imageContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- Vos ImageView pour film1, film2, et film3 -->
-
-
-                <ImageView
-                    android:id="@+id/Film1"
-                    android:layout_width="152dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/film1" />
-
-                <ImageView
-                    android:id="@+id/Film2"
-                    android:layout_width="135dp"
-                    android:layout_height="196dp"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/film2" />
-
-                <ImageView
-                    android:id="@+id/Film3"
-                    android:layout_width="148dp"
-                    android:layout_height="196dp"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/film3" />
-
-            </LinearLayout>
-        </HorizontalScrollView>
-
-        <Button
-            android:id="@+id/previousButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="Précédent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/horizontalScrollView" />
-
-        <Button
-            android:id="@+id/nextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:text="Suivant"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/horizontalScrollView" />
+            app:layout_constraintTop_toBottomOf="@id/titleTextView"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
 
         <TextView
             android:id="@+id/titleTextView1"
@@ -161,74 +108,18 @@
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/previousButton" />
+            app:layout_constraintTop_toBottomOf="@id/recyclerViewFilms" />
 
-        <HorizontalScrollView
-            android:id="@+id/horizontalScrollView1"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewInteractiveStories"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_height="200dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/titleTextView1">
-
-            <!-- Un LinearLayout horizontal pour contenir les images -->
-            <LinearLayout
-                android:id="@+id/imageContainer1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- Vos ImageView pour h1, h2, et h3 -->
-
-                <ImageView
-                    android:id="@+id/histoir1"
-                    android:layout_width="137dp"
-                    android:layout_height="196dp"
-                    android:src="@drawable/h1"
-                    tools:layout_editor_absoluteX="-9dp"
-                    tools:layout_editor_absoluteY="481dp" />
-
-                <ImageView
-                    android:id="@+id/histoir2"
-                    android:layout_width="148dp"
-                    android:layout_height="196dp"
-                    android:src="@drawable/h2"
-                    tools:layout_editor_absoluteX="153dp"
-                    tools:layout_editor_absoluteY="481dp" />
-
-                <ImageView
-                    android:id="@+id/histoir3"
-                    android:layout_width="184dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/h3"
-                    tools:layout_editor_absoluteX="325dp"
-                    tools:layout_editor_absoluteY="490dp" />
-
-
-            </LinearLayout>
-        </HorizontalScrollView>
-
-        <Button
-            android:id="@+id/previousButton1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="Précédent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/horizontalScrollView1" />
-
-        <Button
-            android:id="@+id/nextButton1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:text="Suivant"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/horizontalScrollView1" />
+            app:layout_constraintTop_toBottomOf="@id/titleTextView1"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
 
         <TextView
             android:id="@+id/titleTextView2"
@@ -240,74 +131,18 @@
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/previousButton1" />
+            app:layout_constraintTop_toBottomOf="@id/recyclerViewInteractiveStories" />
 
-        <HorizontalScrollView
-            android:id="@+id/horizontalScrollView2"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewGames"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_height="200dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/titleTextView2">
-
-            <!-- Un LinearLayout horizontal pour contenir les images -->
-            <LinearLayout
-                android:id="@+id/imageContainer2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- Vos ImageView pour h1, h2, et h3 -->
-
-                <ImageView
-                    android:id="@+id/game1"
-                    android:layout_width="170dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/g1"
-                    tools:layout_editor_absoluteX="-9dp"
-                    tools:layout_editor_absoluteY="481dp" />
-
-                <ImageView
-                    android:id="@+id/game2"
-                    android:layout_width="145dp"
-                    android:layout_height="190dp"
-                    android:src="@drawable/g2"
-                    tools:layout_editor_absoluteX="153dp"
-                    tools:layout_editor_absoluteY="481dp" />
-
-                <ImageView
-                    android:id="@+id/game3"
-                    android:layout_width="173dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/g3"
-                    tools:layout_editor_absoluteX="325dp"
-                    tools:layout_editor_absoluteY="490dp" />
-
-
-            </LinearLayout>
-        </HorizontalScrollView>
-
-        <Button
-            android:id="@+id/previousButton2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="Précédent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/horizontalScrollView2" />
-
-        <Button
-            android:id="@+id/nextButton2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:text="Suivant"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/horizontalScrollView2" />
+            app:layout_constraintTop_toBottomOf="@id/titleTextView2"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
 
 
 
