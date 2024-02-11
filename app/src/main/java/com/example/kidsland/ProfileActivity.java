@@ -125,7 +125,8 @@ public class ProfileActivity extends AppCompatActivity {
         RecyclerView recyclerView2 = findViewById(R.id.accountsRecyclerView2);
 
         // Créez un adaptateur pour les éléments de téléchargement
-        DownloadAdapter downloadAdapter = new DownloadAdapter(downloadItemList, R.layout.item_downloads);
+        DownloadAdapter downloadAdapter = new DownloadAdapter(downloadItemList, R.layout.item_downloads, this); // this représente le contexte
+        recyclerView.setAdapter(downloadAdapter);
 
         // Configurez le RecyclerView avec un gestionnaire de disposition horizontal
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);

@@ -19,7 +19,7 @@ import android.widget.VideoView;
 
 import java.util.ArrayList;
 
-public class VideoPlayerActivity extends AppCompatActivity {
+public class  VideoPlayerActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> voiceRecognitionLauncher;
     private VideoView videoView;
 
