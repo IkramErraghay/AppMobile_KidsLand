@@ -5,6 +5,10 @@ public class InteractiveStory {
     private String urlVideo;
     private String urlImage;
 
+    private String yes; // URL for 'oui' response video
+    private String no; // URL for 'oui' response video
+    private String idk; // URL for 'oui' response video
+
     // Default constructor is necessary for Firebase database operations
     public InteractiveStory() {
     }
@@ -38,5 +42,15 @@ public class InteractiveStory {
 
     public void setUrlImage(String urlImage) {
         this.urlImage = urlImage;
+    }
+
+    public String getYes() {
+        return yes;
+    }
+    public String getNo() {
+        return no;
+    }
+    public String getIdk() {
+        return idk;
     }
 }

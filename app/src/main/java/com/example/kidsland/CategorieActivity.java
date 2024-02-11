@@ -42,6 +42,7 @@ public class CategorieActivity extends AppCompatActivity implements
 
     private ImageView rightTopImage;
 
+    // Exemple pour onFilmClick, assurez-vous que les méthodes onInteractiveStoryClick et onGameClick sont ajustées de manière similaire
     @Override
     public void onFilmClick(Film film) {
         StorageReference videoRef = FirebaseStorage.getInstance().getReferenceFromUrl(film.getUrlVideo());
@@ -50,54 +51,166 @@ public class CategorieActivity extends AppCompatActivity implements
             public void onSuccess(Uri downloadUrl) {
                 Intent intent = new Intent(CategorieActivity.this, VideoPlayerActivity.class);
                 intent.putExtra("video_url", downloadUrl.toString());
+                intent.putExtra("category_type", "film");
                 startActivity(intent);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                // Gérez l'erreur ici
                 Toast.makeText(CategorieActivity.this, "Erreur lors du chargement de la vidéo", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 
 
     @Override
     public void onInteractiveStoryClick(InteractiveStory interactiveStory) {
+        // Obtenez d'abord l'URL de téléchargement pour la vidéo principale.
         StorageReference videoRef = FirebaseStorage.getInstance().getReferenceFromUrl(interactiveStory.getUrlVideo());
         videoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
-            public void onSuccess(Uri downloadUrl) {
+            public void onSuccess(Uri mainVideoUrl) {
+                // Préparez l'intent avec l'URL principale de la vidéo.
                 Intent intent = new Intent(CategorieActivity.this, VideoPlayerActivity.class);
-                intent.putExtra("video_url", downloadUrl.toString());
-                startActivity(intent);
+                intent.putExtra("video_url", mainVideoUrl.toString());
+                intent.putExtra("category_type", "interactive_story");
+                intent.putExtra("yes_video_url", interactiveStory.getYes());
+                intent.putExtra("no_video_url", interactiveStory.getNo());
+                intent.putExtra("idk_video_url", interactiveStory.getIdk());
+
+
+                // Vérifiez si une URL "yes" est disponible pour cette histoire interactive.
+                if (interactiveStory.getYes() != null && !interactiveStory.getYes().isEmpty()) {
+                    // Si oui, obtenez l'URL de téléchargement pour la vidéo "yes".
+                    StorageReference videoRefYes = FirebaseStorage.getInstance().getReferenceFromUrl(interactiveStory.getYes());
+                    videoRefYes.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri yesVideoUrl) {
+                            // Ajoutez l'URL "yes" à l'intent.
+                            intent.putExtra("yes_video_url", yesVideoUrl.toString());
+                            // Lancez l'activité une fois que toutes les données sont prêtes.
+                            startActivity(intent);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Gérez l'échec de récupération de l'URL "yes", mais lancez quand même l'activité avec l'URL principale.
+                            startActivity(intent);
+                            Toast.makeText(CategorieActivity.this, "Erreur lors du chargement de la vidéo 'oui'", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else if (interactiveStory.getNo() != null && !interactiveStory.getNo().isEmpty()) {
+                    StorageReference videoRefNo = FirebaseStorage.getInstance().getReferenceFromUrl(interactiveStory.getNo());
+                    videoRefNo.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri noVideoUrl) {
+                            // Ajoutez l'URL "no" à l'intent.
+                            intent.putExtra("no_video_url", noVideoUrl.toString());
+                            // Lancez l'activité une fois que toutes les données sont prêtes.
+                            startActivity(intent);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            startActivity(intent);
+                            Toast.makeText(CategorieActivity.this, "Erreur lors du chargement de la vidéo 'oui'", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } else if (interactiveStory.getIdk() != null && !interactiveStory.getIdk().isEmpty()) {
+
+                    StorageReference videoRefIdk = FirebaseStorage.getInstance().getReferenceFromUrl(interactiveStory.getIdk());
+                    videoRefIdk.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri idkVideoUrl) {
+                            // Ajoutez l'URL "idk" à l'intent.
+                            intent.putExtra("idk_video_url", idkVideoUrl.toString());
+                            // Lancez l'activité une fois que toutes les données sont prêtes.
+                            startActivity(intent);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            startActivity(intent);
+                            Toast.makeText(CategorieActivity.this, "Erreur lors du chargement de la vidéo 'oui'", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } else {
+                    // Pas d'URL "yes" or no or idk , lancez l'activité seulement avec l'URL principale.
+                    startActivity(intent);
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                // Gérez l'erreur ici
-                Toast.makeText(CategorieActivity.this, "Erreur lors du chargement de la vidéo", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CategorieActivity.this, "Erreur lors du chargement de la vidéo principale", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+
     @Override
     public void onGameClick(Game game) {
+        // Obtenez d'abord l'URL de téléchargement pour la vidéo principale.
         StorageReference videoRef = FirebaseStorage.getInstance().getReferenceFromUrl(game.getUrlVideo());
         videoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
-            public void onSuccess(Uri downloadUrl) {
+            public void onSuccess(Uri mainVideoUrl) {
+                // Préparez l'intent avec l'URL principale de la vidéo.
                 Intent intent = new Intent(CategorieActivity.this, VideoPlayerActivity.class);
-                intent.putExtra("video_url", downloadUrl.toString());
-                startActivity(intent);
+                intent.putExtra("video_url", mainVideoUrl.toString());
+                intent.putExtra("category_type", "game");
+
+
+
+
+                    // Si oui, obtenez l'URL de téléchargement pour la vidéo "yes".
+                    StorageReference videoRefYes = FirebaseStorage.getInstance().getReferenceFromUrl(game.getYes());
+                    videoRefYes.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri yesVideoUrl) {
+                            // Ajoutez l'URL "yes" à l'intent.
+                            intent.putExtra("yes_video_url", yesVideoUrl.toString());
+                            // Lancez l'activité une fois que toutes les données sont prêtes.
+                            startActivity(intent);
+                        }
+                    });
+
+                    StorageReference videoRefNo = FirebaseStorage.getInstance().getReferenceFromUrl(game.getNo());
+                    videoRefNo.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri noVideoUrl) {
+                            // Ajoutez l'URL "no" à l'intent.
+                            intent.putExtra("no_video_url", noVideoUrl.toString());
+                            // Lancez l'activité une fois que toutes les données sont prêtes.
+                            startActivity(intent);
+                        }
+                    });
+
+
+                    StorageReference videoRefIdk = FirebaseStorage.getInstance().getReferenceFromUrl(game.getIdk());
+                    videoRefIdk.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri idkVideoUrl) {
+                            // Ajoutez l'URL "idk" à l'intent.
+                            intent.putExtra("idk_video_url", idkVideoUrl.toString());
+                            // Lancez l'activité une fois que toutes les données sont prêtes.
+                            startActivity(intent);
+                        }
+                    });
+
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                Toast.makeText(CategorieActivity.this, "Erreur lors du chargement de la vidéo", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CategorieActivity.this, "Erreur lors du chargement de la vidéo principale", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
