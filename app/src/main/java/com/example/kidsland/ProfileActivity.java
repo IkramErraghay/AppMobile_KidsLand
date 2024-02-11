@@ -60,6 +60,15 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        ImageView backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Termine l'activité actuelle et revient à la précédente dans la pile d'activités.
+                onBackPressed();
+            }
+        });
+
         // Initialize Firebase components
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
@@ -124,9 +133,17 @@ public class ProfileActivity extends AppCompatActivity {
         // Obtenez la référence du RecyclerView pour la section "My Selection"
         RecyclerView recyclerView2 = findViewById(R.id.accountsRecyclerView2);
 
+
+
         // Créez un adaptateur pour les éléments de téléchargement
-        DownloadAdapter downloadAdapter = new DownloadAdapter(downloadItemList, R.layout.item_downloads, this); // this représente le contexte
-        recyclerView.setAdapter(downloadAdapter);
+        DownloadAdapter downloadAdapter = new DownloadAdapter(downloadItemList, R.layout.item_downloads);
+
+        downloadAdapter.setOnItemClickListener(position -> {
+            if (position == downloadItemList.size() - 1) { // Si c'est le dernier élément "New Film"
+                Intent intent = new Intent(this, CategorieActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Configurez le RecyclerView avec un gestionnaire de disposition horizontal
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
