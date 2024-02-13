@@ -75,13 +75,9 @@ public class CategorieActivity extends AppCompatActivity implements
                 Intent intent = new Intent(CategorieActivity.this, VideoPlayerActivity.class);
                 intent.putExtra("video_url", mainVideoUrl.toString());
                 intent.putExtra("category_type", "interactive_story");
-                intent.putExtra("yes_video_url", interactiveStory.getYes());
-                intent.putExtra("no_video_url", interactiveStory.getNo());
-                intent.putExtra("idk_video_url", interactiveStory.getIdk());
 
 
-                // Vérifiez si une URL "yes" est disponible pour cette histoire interactive.
-                if (interactiveStory.getYes() != null && !interactiveStory.getYes().isEmpty()) {
+
                     // Si oui, obtenez l'URL de téléchargement pour la vidéo "yes".
                     StorageReference videoRefYes = FirebaseStorage.getInstance().getReferenceFromUrl(interactiveStory.getYes());
                     videoRefYes.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -92,15 +88,8 @@ public class CategorieActivity extends AppCompatActivity implements
                             // Lancez l'activité une fois que toutes les données sont prêtes.
                             startActivity(intent);
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Gérez l'échec de récupération de l'URL "yes", mais lancez quand même l'activité avec l'URL principale.
-                            startActivity(intent);
-                            Toast.makeText(CategorieActivity.this, "Erreur lors du chargement de la vidéo 'oui'", Toast.LENGTH_SHORT).show();
-                        }
                     });
-                } else if (interactiveStory.getNo() != null && !interactiveStory.getNo().isEmpty()) {
+
                     StorageReference videoRefNo = FirebaseStorage.getInstance().getReferenceFromUrl(interactiveStory.getNo());
                     videoRefNo.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
@@ -110,15 +99,9 @@ public class CategorieActivity extends AppCompatActivity implements
                             // Lancez l'activité une fois que toutes les données sont prêtes.
                             startActivity(intent);
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            startActivity(intent);
-                            Toast.makeText(CategorieActivity.this, "Erreur lors du chargement de la vidéo 'oui'", Toast.LENGTH_SHORT).show();
-                        }
                     });
 
-                } else if (interactiveStory.getIdk() != null && !interactiveStory.getIdk().isEmpty()) {
+
 
                     StorageReference videoRefIdk = FirebaseStorage.getInstance().getReferenceFromUrl(interactiveStory.getIdk());
                     videoRefIdk.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -129,18 +112,9 @@ public class CategorieActivity extends AppCompatActivity implements
                             // Lancez l'activité une fois que toutes les données sont prêtes.
                             startActivity(intent);
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            startActivity(intent);
-                            Toast.makeText(CategorieActivity.this, "Erreur lors du chargement de la vidéo 'oui'", Toast.LENGTH_SHORT).show();
-                        }
                     });
 
-                } else {
-                    // Pas d'URL "yes" or no or idk , lancez l'activité seulement avec l'URL principale.
-                    startActivity(intent);
-                }
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
